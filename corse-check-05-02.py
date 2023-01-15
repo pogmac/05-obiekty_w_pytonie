@@ -9,7 +9,7 @@ class Car:
 my_car = Car()
 print(type(my_car))
 """
-"""
+
 class Car:
     def __init__(self, make, model_name, top_speed, color):
        self.make = make
@@ -50,12 +50,12 @@ class Car:
     #        self.color == other.color
     #    )         
     
-"""   
+  
 #Mając tak zbudowany konstruktor, nie jest możliwe utworzenie nowych instancji klasy Car bez podania tych czterech parametrów: marki, modelu, prędkości maksymalnej i koloru.       
-"""
+
 mustang = Car(make="Ford", model_name="Mustang", color="Yellow", top_speed=250)
 print(mustang)
-
+"""
 print(mustang.make)
 #print(mustang.model_name)
 #print(mustang.color)
@@ -242,7 +242,39 @@ class Truck(Car):
        super().__init__(*args, **kwargs)
        self.max_load = max_load
 
-## Moduł 05.03 BEGIN przenieść na koniec
+
+
+
+"""
+car = Car(make="Ford", model_name="Mustang", top_speed=250, color="Red")
+car.current_speed: print(car.current_speed)
+car.accelerate(); print(car.current_speed)
+car.accelerate(50); print(car.current_speed)
+
+## @property - dynamiczne atrybuty klas
+
+car = Car(make="Ford", model_name="Mustang", top_speed=250, color="Red")
+car.current_speed = 100; print(car.current_speed)
+
+car = Car(make="Ford", model_name="Mustang", top_speed=250, color="red")
+print(car.current_speed); print()
+
+#car.current_speed() Metoda current_speed zachowuje się w tej chwili tak, jakby była zwykłym atrybutem klasy Car.
+
+car = Car(make="Ford", model_name="Mustang", top_speed=250, color="Red")
+car.current_speed = 100
+print(car.current_speed)
+
+#car.current_speed = 400 # W tym konkretnym przypadku zapewniamy, że wartość current_speed nigdy nie przekroczy prędkości maksymalnej samochodu:
+
+print(car.current_speed)
+"""
+## Koniec Modułu 05.02
+
+
+## Moduł 05.03 BEGIN 
+
+"""
 print("BEGIN 05.03")
 truck = Truck(make="Mercedes", model_name="Actros", color="Black", top_speed=90, max_load=1200)
 print();print(truck);print()
@@ -272,38 +304,79 @@ print("isinstance(truck, Car)", end = " "); print(isinstance(truck, Car));print(
 print("issubclass(Truck,Car)", end =" ");print(issubclass(Truck,Car))
 print("issubclass(Car,Truck)", end =" ");print(issubclass(Car,Truck))
 
-
 print();print()
 print("END 05.03")
 #print();print()
 
-## Moduł 05.03 END przeniesc na koniec
 """
-car = Car(make="Ford", model_name="Mustang", top_speed=250, color="Red")
-car.current_speed: print(car.current_speed)
-car.accelerate(); print(car.current_speed)
-car.accelerate(50); print(car.current_speed)
-
-## @property – dynamiczne atrybuty klas
-
-car = Car(make="Ford", model_name="Mustang", top_speed=250, color="Red")
-car.current_speed = 100; print(car.current_speed)
-
-car = Car(make="Ford", model_name="Mustang", top_speed=250, color="red")
-print(car.current_speed); print()
-
-#car.current_speed() Metoda current_speed zachowuje się w tej chwili tak, jakby była zwykłym atrybutem klasy Car.
-
-car = Car(make="Ford", model_name="Mustang", top_speed=250, color="Red")
-car.current_speed = 100
-print(car.current_speed)
-
-#car.current_speed = 400 # W tym konkretnym przypadku zapewniamy, że wartość current_speed nigdy nie przekroczy prędkości maksymalnej samochodu:
-
-print(car.current_speed)
-"""
-## Koniec Modułu 05.02
+## Moduł 05.03 END
 
 
+## Moduł 05.04 Wielodziedziczenie BEGIN 
 
+class DieselEngine:
+   def tank(self, how_many=100):
+       print(f"Adding {how_many} liters of Diesel")
+
+class PetrolEngine:
+   def tank(self, how_many=20):
+       print(f"Adding {how_many} liters of Petrol")
+
+class Truck(Car, DieselEngine):
+   def __init__(self, max_load, *args, **kwargs):
+       super().__init__(*args, **kwargs)
+       self.max_load = max_load
+
+class SportCar(Car, PetrolEngine):
+   pass
+
+#Zdefiniowaliśmy również klasę SportCar, która jest specjalnym przypadkiem klasy Car, z dodatkiem silnika benzynowego (nie definiuje żadnej dodatkowe logiki, więc zawiera jedynie instrukcję pass). W efekcie będzie dostarczała wszystko, co ma klasa Car oraz wszystko, co daje klasa PetrolEngine.
+
+truck = Truck(make="Mercedes", model_name="Sprinter", color="Black", top_speed=90, max_load=1200)
+porsche = SportCar(make="Porsche", model_name="911", color="Red", top_speed=250)
+truck.tank()
+porsche.tank()
+
+
+# Zestaw wskazówek dla programistów:
+# import this
+
+# We wcześniejszej części tego modułu poznaliśmy @property, czyli zapis dekoratora w Pythonie.
+
+#W Pythonie dekorator jest funkcją, która jako parametr przyjmuje inną funkcję (pamiętaj, że wszystko w Pythonie jest obiektem, więc bez problemu możemy przypisać funkcję do zmiennej, bez jej wywołania). Dzięki temu zachowaniu jesteśmy w stanie dynamicznie zmienić zachowanie dekorowanej funkcji. Dekoratory w Pythonie wywołujemy z użyciem @.
+
+def say_hello():
+   greeting = "Hello stranger!"
+   return greeting
+
+print(say_hello())   
+
+def say_louder(func):
+   def wrapper():
+       result = func()
+       return result.upper()
+   return wrapper
+
+@say_louder
+def say_hello():
+   greeting = "Hello stranger!"
+   return greeting
+
+print(say_hello())
+
+#Powyższy zapis z użyciem @say_louder jest jednoznaczny z wywołaniem funkcji w ten sposób:
+
+say_hello = say_louder(say_hello)
+print(say_hello())
+
+#Niemniej jednak, jeśli chcemy, aby funkcja pozostała udekorowana za każdym razem, kiedy jest wywoływana, najlepiej użyć składni z @.
+
+#Ćwiczenie
+#Napisz funkcję, która tworzy listę zawierającą 1000 wizytówek z losowymi danymi (użyj biblioteki faker, którą opisywaliśmy w tym module).
+
+#Następnie stwórz dekorator, który zmierzy czas wykonywania tej operacji. Niech udekorowana funkcja wyświetla czas obliczeń (w sekundach) po ich zakończeniu.
+
+#Wskazówka. W Pythonie do operacji na datach i czasie wykorzystuje się moduł datetime. Zapoznaj się z jego dokumentacją.
+
+## Moduł 05.04 Wielodziedziczenie END
 

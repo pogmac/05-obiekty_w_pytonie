@@ -30,6 +30,9 @@ class BusinessContact(BaseContact): # Definicja klasy rozszeżającej klasę pod
 
 ### Tworzę funkcje create BaseContact i BusinessContact
 
+
+import datetime
+import time
 from faker import Faker
 fake = Faker()
 #def createBaseContact():
@@ -40,6 +43,7 @@ fake = Faker()
 #    faker_p = BusinessContact(imie = fake.first_name(), nazwisko =fake.last_name(), telefon_prywatny=fake.phone_number(), adres_email= fake.email(), nazwa_firmy = fake.company(), stanowisko = fake.job(), telefon_sluzbowy = fake.phone_number())
 #    return faker_p
 
+name_list =[]
 def create_contacts(conType,number):
     """
     Creates a certain number of business cards of a passed type "conType" and assigns them to a list name_list[]
@@ -47,34 +51,41 @@ def create_contacts(conType,number):
     conType = [BaseContact,BusinessContact]
     number = integer
     """
-    name_list =[]
+    
     print();print("Wybrałeś typ = ", conType);print("Liczba wizytówek stworzona =", number); print()
     if conType == BaseContact:    
         for i in range(number):
             faker_p = BaseContact(imie = fake.first_name(), nazwisko =fake.last_name(), telefon_prywatny=fake.phone_number(), adres_email= fake.email())
             name_list.append(faker_p) #print("Typ =", conType, i)
-            print(name_list[i])
+            #print(name_list[i])
         print()
     elif conType == BusinessContact:    
         for i in range(number):
             faker_p = BusinessContact(imie = fake.first_name(), nazwisko =fake.last_name(), telefon_prywatny=fake.phone_number(), adres_email= fake.email(), nazwa_firmy = fake.company(), stanowisko = fake.job(), telefon_sluzbowy = fake.phone_number())
             name_list.append(faker_p) #print("Typ =", conType, i)
-            print(name_list[i])
+            #print(name_list[i])
         print()
     else:
         print("Wybierz właściwy typ kontaktu (BaseContact lub BusinessContact")
+t1 = time.time()
 
-create_contacts(BaseContact,3)
-create_contacts(BusinessContact,3)
+create_contacts(BaseContact,5000)
+#create_contacts(BusinessContact,3)
+"""
+for i in range(len(name_list)):
+    print(f"{name_list[i].imie}, {name_list[i].nazwisko}, {name_list[i].telefon_prywatny}, {name_list[i].adres_email}")
+    print()
+"""
 
 #print(help(create_contacts))
+t2 = time.time()
 
-
+print(f"zadanie zajęło: {t2-t1} sekund")
 
 
 
 ### testowanie czy działa na prostych kontaktach Base i Business
-"""
+
 messi = BaseContact(imie = "leo", nazwisko="Messi", telefon_prywatny ="+48123456789", adres_email="maciejmaciejewski@jourrapide.com") 
 lewybiz = BusinessContact(imie = "Robert", nazwisko="Lewandowski", telefon_prywatny ="+48123456789", adres_email="maciejmaciejewski@jourrapide.com", nazwa_firmy="Orlen", stanowisko = "CEO", telefon_sluzbowy = "+49987654321")
 print();#print(maciejewski)
@@ -85,7 +96,7 @@ print();#print(maciejewski_biznes)
 print(BusinessContact.contact(lewybiz))
 print("lewybis.len_imin = ", end = " ");print(lewybiz.len_imin)
 print()
-"""
+
 
 ### Sprawdzam funkcje create BaseContact i BusinessContact
 #johnBase = createBaseContact();print(johnBase)
